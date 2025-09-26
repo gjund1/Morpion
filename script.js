@@ -1,9 +1,9 @@
 const game = document.querySelector("#game")
 
 const board = [
-    [0, 1, 0],
     [0, 0, 0],
-    [2, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
 ]
 
 let playeur = 1
@@ -29,6 +29,15 @@ function generatBoard (board) {
             square.classList.add("square")
             square.dataset.state = value
             lineDiv.appendChild(square)
+
+            square.addEventListener("click", () => {
+                if (value != 0)
+                    return
+
+                board[lineIndex][squareIndex] = playeur
+                playeur = (playeur === 1 ? 2 : 1)
+                generatBoard(board)
+            })
         })
     })
 }
