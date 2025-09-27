@@ -31,6 +31,12 @@ body {
   width: 33%;
   height: 100%;
   margin-right: 10px;
+
+  justify-content: center;
+  align-items: center;
+  font-size: 5rem;   /* taille du X et O */
+  font-weight: bold;
+  color: white;      /* ou noir selon tes couleurs */
 }
 
 .square:last-of-type {
