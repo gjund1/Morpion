@@ -1,45 +1,71 @@
-const game = document.querySelector("#game")
+const game = document.querySelector('#game')
+let player = 1
 
-const board = [
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-]
-
-let playeur = 1
-
-function cleanBoard () {
-    while (game.firstChild)
-        game.removeChild(game.firstChild)
+const cleanBoard = () => {
+  while (game.firstChild)
+    game.removeChild(game.firstChild)
 }
 
-function generatBoard (board) {
-    cleanBoard(board)
+const checkValues = (v1, v2, v3) => v1 === v2 && v2 === v3
 
-    board.forEach((line, lineIndex) => {
-        // line = [0, 1, 0]  lineIndex = 0, 1 ou 2e ligne
-        const lineDiv = document.createElement("div")
-        lineDiv.classList.add("line")
-        game.appendChild(lineDiv)
+const checkLines = board => {
+  let status = false
 
-        line.forEach((value, squareIndex) => {
-            // value = 0 vide, playeur 1, playeur 2
-            // squareIndex = case 1, 2 ou 3
-            const square = document.createElement("div")
-            square.classList.add("square")
-            square.dataset.state = value
-            lineDiv.appendChild(square)
+  board.forEach(line => {
+    if (status) return true
 
-            square.addEventListener("click", () => {
-                if (value != 0)
-                    return
+    if (!line.includes(0))
+      status = checkValues(line[0], line[1], line[2])
+  })
 
-                board[lineIndex][squareIndex] = playeur
-                playeur = (playeur === 1 ? 2 : 1)
-                generatBoard(board)
-            })
-        })
+  return status
+}
+
+const checkColumns = board =>
+  checkLines([
+    [board[0][0], board[1][0], board[2][0]],
+    [board[0][1], board[1][1], board[2][1]],
+    [board[0][2], board[1][2], board[2][2]],
+  ])
+
+const generateBoard = board => {
+  cleanBoard()
+
+  if (checkLines(board) || checkColumns(board)) {
+    alert("GAME OVER !")
+    return generateBoard([
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0],
+    ])
+  }
+
+  board.forEach((line, lineIndex) => {
+    const lineDiv = document.createElement('div')
+
+    lineDiv.classList.add('line')
+    game.appendChild(lineDiv)
+
+    line.forEach((value, squareIndex) => {
+      const square = document.createElement('div')
+
+      square.classList.add('square')
+      square.dataset.state = value
+      lineDiv.appendChild(square)
+
+      square.addEventListener('click', () => {
+        if (value !== 0) return
+
+        board[lineIndex][squareIndex] = player
+        player = player === 1 ? 2 : 1
+        generateBoard(board)
+      })
     })
+  })
 }
 
-generatBoard (board)
+generateBoard([
+  [0, 0, 0],
+  [0, 0, 0],
+  [0, 0, 0],
+])
